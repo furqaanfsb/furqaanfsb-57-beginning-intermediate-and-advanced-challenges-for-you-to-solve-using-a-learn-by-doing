@@ -1,0 +1,120 @@
+select * from sys.tables
+
+
+select * from Categories
+select * from Products
+
+--20
+
+select  c.CategoryName,count(c.CategoryName) as totalproducts from Products p
+left join categories c
+on p.categoryid=c.categoryid
+group by  c.CategoryName 
+order by totalproducts desc
+
+--21
+/*select * from Customers
+select country ,count(country) as totalcustomers from Customers
+group by country
+union 
+select city ,count(city) as totalcustomers from Customers
+group by City*/
+
+select * from Customers
+select country,City ,count(City) as totalcustomers from Customers
+group by country,city
+order by totalcustomers desc
+
+
+--22
+select * from Products
+
+
+select productname from Products
+where UnitsInStock<ReorderLevel
+order by ProductID
+
+select productid,productname, UnitsInStock,ReorderLevel from Products
+where UnitsInStock<ReorderLevel
+order by ProductID
+
+--23
+select productid,productname, UnitsInStock,ReorderLevel from Products
+where (UnitsInStock + UnitsOnOrder)<=ReorderLevel and Discontinued=0
+order by ProductID
+
+
+--24
+select * from Customers
+
+select customerid,CompanyName,Region from Customers
+order by  Region
+
+select customerid,CompanyName,Region from Customers
+order by  Region desc,customerid asc
+
+
+select customerid,CompanyName,Region,
+sregion=case 
+	when region is null then 1
+	else 0
+	end 
+from Customers
+
+select customerid,CompanyName,Region,
+sort_region =case
+	when region is null then 1
+	else 0
+	end 
+from Customers
+order by sort_region,customerid
+
+
+select customerid,CompanyName,Region,
+sregion =case
+	when region is null then 1
+	else 0
+	end 
+from Customers
+order by (case  
+	WHEN sregion = 0 THEN CustomerID
+	ELSE sregion
+end)
+
+--24 finally solved via hit and trail method
+select customerid,CompanyName,Region,
+sregion=case 
+	when region is null then 1
+	else 0
+	end 
+from Customers
+order by sregion,Region
+
+---25
+select * from Customers
+select * from Region
+select * from CustomerDemographics
+select * from sys.tables
+select * from Orders
+
+select top 3 shipcountry,AVG(freight) as avg_freight_per_country from Orders
+group by shipcountry
+order by avg_freight_per_country desc
+
+
+--26 note doesnot have data wrt 2015 so tried on 1997 instead
+select top 3 shipcountry,AVG(freight) as avg_freight_per_country from Orders
+where OrderDate  >'1997-01-01' and OrderDate  <'1998-01-01'
+group by shipcountry
+order by avg_freight_per_country desc
+
+
+---27
+
+select top 3 shipcountry,AVG(freight) as avg_freight_per_country from Orders
+where OrderDate  between '1997-01-01' and '1998-01-01'
+group by shipcountry
+order by avg_freight_per_country desc
+
+
+
